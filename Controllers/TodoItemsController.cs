@@ -30,10 +30,7 @@ namespace Identity_Todo.Controllers
         public async Task<ActionResult> Index(string filter)
         {
             var user = await GetCurrentUserAsync();
-            var items = await _context.TodoItem
-                .Where(ti => ti.ApplicationUserId == user.Id)
-                .Include(ti => ti.TodoStatus)
-                .ToListAsync();
+            var items = new List<TodoItem>();
 
             switch (filter)
             {
@@ -64,6 +61,12 @@ namespace Identity_Todo.Controllers
                         .Include(ti => ti.TodoStatus)
                         .ToListAsync();
                     break;
+                default: 
+                    items = await _context.TodoItem
+                        .Where(ti => ti.ApplicationUserId == user.Id)
+                        .Include(ti => ti.TodoStatus)
+                        .ToListAsync();
+                    break;
             }
 
             return View(items);
@@ -79,12 +82,11 @@ namespace Identity_Todo.Controllers
         public async Task<ActionResult> Create()
         {
             var allStatuses = await _context.TodoStatus
-                .Select(td => new SelectListItem() { Text = td.Title, Value = td.Id.ToString() })
                 .ToListAsync();
 
             var viewModel = new TodoItemViewModel();
 
-            viewModel.TodoStatusOptions = allStatuses;
+            viewModel.TodoStatusOptions = allStatuses.Select(td => new SelectListItem() { Text = td.Title, Value = td.Id.ToString() }).ToList();
 
             return View(viewModel);
         }
@@ -120,7 +122,6 @@ namespace Identity_Todo.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var allStatuses = await _context.TodoStatus
-                .Select(td => new SelectListItem() { Text = td.Title, Value = td.Id.ToString() })
                 .ToListAsync();
 
             var todoItem = _context.TodoItem.FirstOrDefault(ti => ti.Id == id);
@@ -129,9 +130,8 @@ namespace Identity_Todo.Controllers
             {
                 Title = todoItem.Title,
                 TodoStatusId = todoItem.TodoStatusId,
-                ApplicationUserId = todoItem.ApplicationUserId,
-                TodoStatusOptions = allStatuses
-            };
+                TodoStatusOptions = allStatuses.Select(td => new SelectListItem() { Text = td.Title, Value = td.Id.ToString() }).ToList()
+        };
 
             return View(viewModel);
         }

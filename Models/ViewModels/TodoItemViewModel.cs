@@ -14,10 +14,6 @@ namespace Identity_Todo.Models.ViewModels
         [Required]
         public string Title { get; set; }
         public int TodoStatusId { get; set; }
-        public TodoStatus TodoStatus { get; set; }
-        public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
-        [NotMapped]
         public List<SelectListItem> TodoStatusOptions { get; set; }
 
     }
