@@ -15,6 +15,5 @@ namespace Identity_Todo.Models.ViewModels
         public string Title { get; set; }
         public int TodoStatusId { get; set; }
         public List<SelectListItem> TodoStatusOptions { get; set; }
-
     }
 }

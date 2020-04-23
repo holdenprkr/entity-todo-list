@@ -58,7 +58,5 @@ namespace Identity_Todo.Data
 
             );
         }
-
-        public DbSet<Identity_Todo.Models.ViewModels.TodoItemViewModel> TodoItemViewModel { get; set; }
     }
 }
